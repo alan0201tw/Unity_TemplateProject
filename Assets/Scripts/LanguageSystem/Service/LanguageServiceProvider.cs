@@ -34,7 +34,9 @@ namespace GameServices.LanguageService
 
         public LanguageServiceProvider()
         {
-            LanguageType defaultType = (LanguageType)PlayerPrefs.GetInt(PlayerPrefsLanguageKey, (int)LanguageType.Chinese);
+            // Initialize Language setting with PlayerPrefs, set default to Chinese
+            LanguageType defaultType = 
+                (LanguageType)PlayerPrefs.GetInt(PlayerPrefsLanguageKey, (int)LanguageType.Chinese);
 
             SetLanguageType(defaultType);
         }
@@ -50,6 +52,9 @@ namespace GameServices.LanguageService
                 return;
 
             m_currentLanguageType = languageType;
+            // save change to PlayerPrefs
+            PlayerPrefs.SetInt(PlayerPrefsLanguageKey, (int)m_currentLanguageType);
+
             if (OnLanguageTypeChange != null)
             {
                 OnLanguageTypeChange.Invoke(m_currentLanguageType);

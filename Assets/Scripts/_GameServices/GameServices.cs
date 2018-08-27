@@ -5,7 +5,7 @@ namespace GameServices
 {
     public class GameServicesLocator
     {
-        private static GameServicesLocator s_instance = new GameServicesLocator();
+        private static readonly GameServicesLocator s_instance = new GameServicesLocator();
         public static GameServicesLocator Instance
         {
             get { return s_instance; }
@@ -21,8 +21,36 @@ namespace GameServices
             Debug.Log("GameServicesLocator : Initialize");
         }
 
-        public IAudioServiceProvider audioServiceProvider = new AudioService.AudioServiceProvider();
-        public ISceneServiceProvider sceneServiceProvider = new SceneService.SceneServiceProvider();
-        public ILanguageServiceProvider languageServiceProvider = new LanguageService.LanguageServiceProvider();
+        #region Constant Existed Service, instantiate right here
+
+        public readonly IAudioServiceProvider AudioServiceProvider = new AudioService.AudioServiceProvider();
+
+        public readonly ISceneServiceProvider SceneServiceProvider = new SceneService.SceneServiceProvider();
+
+        public readonly ILanguageServiceProvider LanguageServiceProvider = new LanguageService.LanguageServiceProvider();
+
+        #endregion
+
+        #region Services that should be provided by each scene
+        // It this service need to vary from scene to scene, put it here and provide it externally
+        // so changing service provider can be easy
+
+        // You can optionally have multiple service provider with same interface
+        // For example, one ITextDisplayServiceProvider for gaming hints, and another for story telling
+
+        private ITextDisplayServiceProvider m_textDisplayServiceProvider;
+        public ITextDisplayServiceProvider TextDisplayServiceProvider
+        {
+            get { return m_textDisplayServiceProvider; }
+            set
+            {
+                if (value == null)
+                    Debug.LogError("GameServices : TextDisplayServiceProvider : Error trying to provide null service.");
+
+                m_textDisplayServiceProvider = value;
+            }
+        }
+
+        #endregion
     }
 }

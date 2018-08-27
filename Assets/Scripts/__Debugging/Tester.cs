@@ -10,26 +10,26 @@ public class Tester : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.A))
         {
-            GameServicesLocator.Instance.audioServiceProvider.SetVolume(volume);
+            GameServicesLocator.Instance.AudioServiceProvider.SetVolume(volume);
         }
-        if(Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.S))
         {
-            GameServicesLocator.Instance.sceneServiceProvider.LoadSceneAsync(1, () =>
+            GameServicesLocator.Instance.SceneServiceProvider.LoadSceneAsync(1, () =>
             {
                 Debug.Log("Load Scene Complete.");
             });
         }
-        if(Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.D))
         {
-            GameServicesLocator.Instance.languageServiceProvider.SetLanguageType(languageType);
+            GameServicesLocator.Instance.LanguageServiceProvider.SetLanguageType(languageType);
         }
 
-        if(Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.W))
         {
-            Debug.Log(GameServicesLocator.Instance.languageServiceProvider.GetCurrentLanguageType());
-            Debug.Log(GameServicesLocator.Instance.audioServiceProvider.GetCurrentVolume());
+            Debug.Log(GameServicesLocator.Instance.LanguageServiceProvider.GetCurrentLanguageType());
+            Debug.Log(GameServicesLocator.Instance.AudioServiceProvider.GetCurrentVolume());
         }
     }
 }

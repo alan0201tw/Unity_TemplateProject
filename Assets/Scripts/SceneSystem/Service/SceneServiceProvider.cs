@@ -32,8 +32,22 @@ namespace GameServices.SceneService
 
         private bool m_isLoadingScene;
 
+        public int CurrentSceneIndex
+        {
+            get { return SceneManager.GetActiveScene().buildIndex; }
+        }
+
+        public string CurrentSceneName
+        {
+            get { return SceneManager.GetActiveScene().name; }
+        }
+
         public void LoadScene(int sceneIndex, Action onLoadComplete = null)
         {
+            // if there is a coroutine running, ignore this request
+            if (m_isLoadingScene)
+                return;
+
             // since this is blocking, no need to set up the loading flag
             SceneManager.LoadScene(sceneIndex);
             if (onLoadComplete != null)
@@ -42,6 +56,9 @@ namespace GameServices.SceneService
 
         public void LoadScene(string sceneName, Action onLoadComplete = null)
         {
+            if (m_isLoadingScene)
+                return;
+
             // since this is blocking, no need to set up the loading flag
             SceneManager.LoadScene(sceneName);
             if (onLoadComplete != null)

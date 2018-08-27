@@ -19,6 +19,7 @@ namespace GameServices.AudioService
 
         public AudioServiceProvider()
         {
+            // Initialize Audio setting with PlayerPrefs, set default to 1
             SetVolume(PlayerPrefs.GetFloat(PlayerPrefsVolumeKey, 1f));
         }
 
@@ -30,6 +31,7 @@ namespace GameServices.AudioService
         public void SetVolume(float volume)
         {
             m_currentVolume = Mathf.Clamp01(volume);
+            // save change to PlayerPrefs
             PlayerPrefs.SetFloat(PlayerPrefsVolumeKey, m_currentVolume);
         }
     }
