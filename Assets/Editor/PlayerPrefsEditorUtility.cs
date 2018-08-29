@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
-public class MenuItems
+namespace FatshihEditor
 {
-    [MenuItem("Tools/Clear PlayerPrefs")]
-    private static void NewMenuOption()
+    public class MenuItems
     {
-        PlayerPrefs.DeleteAll();
+        [MenuItem("Tools/Clear PlayerPrefs")]
+        private static void ClearPlayerPrefs()
+        {
+            PlayerPrefs.DeleteAll();
+        }
     }
 }

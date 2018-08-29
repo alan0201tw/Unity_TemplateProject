@@ -150,24 +150,5 @@ namespace GameServices.TextDisplayService
                 yield return new WaitForEndOfFrame();
             }
         }
-
-        // DEBUG CODE
-# if UNITY_EDITOR
-        [SerializeField]
-        private string message;
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Z))
-            {
-                GameServicesLocator.Instance.TextDisplayServiceProvider.DisplayText(message, 1.5f);
-            }
-            if (Input.GetKeyDown(KeyCode.X))
-            {
-                GameServicesLocator.Instance.TextDisplayServiceProvider.DisplayText("YEEE", 0.5f);
-            }
-        }
-# endif
-        //
     }
 }

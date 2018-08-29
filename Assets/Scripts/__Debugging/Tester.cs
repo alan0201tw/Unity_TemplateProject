@@ -1,35 +1,26 @@
 ﻿using UnityEngine;
 using GameServices;
 
-public class Tester : MonoBehaviour
+namespace FatshihDebug
 {
-    [SerializeField]
-    private float volume;
-    [SerializeField]
-    private LanguageType languageType;
-
-    private void Update()
+    public class Tester : MonoBehaviour
     {
-        if (Input.GetKeyDown(KeyCode.A))
+        private void Start()
         {
-            GameServicesLocator.Instance.AudioServiceProvider.SetVolume(volume);
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            GameServicesLocator.Instance.SceneServiceProvider.LoadSceneAsync(1, () =>
+            GameServicesLocator.Instance.MobileInputServiceProvider.OnTouchEnded += (boo, p) =>
             {
-                Debug.Log("Load Scene Complete.");
-            });
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            GameServicesLocator.Instance.LanguageServiceProvider.SetLanguageType(languageType);
-        }
+                Debug.Log("OnTouchEnded");
+            };
 
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            Debug.Log(GameServicesLocator.Instance.LanguageServiceProvider.GetCurrentLanguageType());
-            Debug.Log(GameServicesLocator.Instance.AudioServiceProvider.GetCurrentVolume());
+            GameServicesLocator.Instance.MobileInputServiceProvider.OnTouchMoving += (boo, p) =>
+            {
+                Debug.Log("OnTouchMoving");
+            };
+
+            GameServicesLocator.Instance.MobileInputServiceProvider.OnJoystickMoving += (b, arg) =>
+            {
+                Debug.Log("OnJoystickMoving : Motion = " + arg.motion);
+            };
         }
     }
 }

@@ -122,6 +122,7 @@ GameObject:
   m_Component:
   - component: {fileID: 231700589}
   - component: {fileID: 231700590}
+  - component: {fileID: 231700591}
   m_Layer: 0
   m_Name: _LocalServices
   m_TagString: Untagged
@@ -156,7 +157,99 @@ MonoBehaviour:
   targetCanvas: {fileID: 609395760}
   textDisplayPrefab: {fileID: 1469104300235048, guid: 1207a5d070b7767408a77943f77fa899,
     type: 2}
-  message: FAT FAT FAT
+--- !u!114 &231700591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 231700588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d8a16f93c650cc40adfb2db6071cd96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  joystick: {fileID: 592276645}
+--- !u!1 &592276641
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 592276642}
+  - component: {fileID: 592276644}
+  - component: {fileID: 592276643}
+  - component: {fileID: 592276645}
+  m_Layer: 5
+  m_Name: DummyJoyStick
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &592276642
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 592276641}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 609395761}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 200.00006, y: 200.00003}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &592276643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 592276641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+--- !u!222 &592276644
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 592276641}
+--- !u!114 &592276645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 592276641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12df30f0c6e05ff4b9a9970fbb9acb8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementRadius: 50
 --- !u!1 &609395757
 GameObject:
   m_ObjectHideFlags: 0
@@ -241,7 +334,8 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
-  m_Children: []
+  m_Children:
+  - {fileID: 592276642}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -321,6 +415,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1062753561}
   - component: {fileID: 1062753560}
+  - component: {fileID: 1062753562}
   m_Layer: 0
   m_Name: __Debugging
   m_TagString: Untagged
@@ -339,8 +434,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f118382033fd96243a7529f1f07b5cb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  volume: 0
-  languageType: 0
 --- !u!4 &1062753561
 Transform:
   m_ObjectHideFlags: 0
@@ -354,6 +447,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1062753562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1062753559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcb79dd36eca0f94db6443983415b468, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FPSUpdateRate: 0.1
 --- !u!1 &1170456530
 GameObject:
   m_ObjectHideFlags: 0

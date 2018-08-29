@@ -18,7 +18,7 @@ namespace GameServices
 
         private void Initialize()
         {
-            Debug.Log("GameServicesLocator : Initialize");
+            // Do something here.
         }
 
         #region Constant Existed Service, instantiate right here
@@ -48,6 +48,19 @@ namespace GameServices
                     Debug.LogError("GameServices : TextDisplayServiceProvider : Error trying to provide null service.");
 
                 m_textDisplayServiceProvider = value;
+            }
+        }
+
+        private IMobileInputServiceProvider m_mobileInputServiceProvider;
+        public IMobileInputServiceProvider MobileInputServiceProvider
+        {
+            get { return m_mobileInputServiceProvider; }
+            set
+            {
+                if (value == null)
+                    Debug.LogError("GameServices : MobileInputServiceProvider : Error trying to provide null service.");
+
+                m_mobileInputServiceProvider = value;
             }
         }
 
