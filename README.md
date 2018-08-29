@@ -11,16 +11,23 @@ The fastest way is to clone it and remove .git folder, or you can download it as
 
 ## Current Services
 
+* __Debugging
+    * FPSVisualizer
+    * RenderDepth (for testing shaders that require depth textures)
+
 * __Utility
     * ObjectPool
     * EventHandler
+    * AngleMath
+    * ColorMath
 
 * _GameServices (Constant)
     * AudioService
     * SceneService
     * LanguageService
-* _GameServices (Provide by register)
-    * TextDisplayService
+
+* MobileInputSystem (with JoyStick support)
+* TextDisplaySystem
 
 * Shader
     * 2D (UI)
@@ -32,13 +39,3 @@ The fastest way is to clone it and remove .git folder, or you can download it as
         * DissolveSurfaceShader.shader
         * WaterShader.shader
         * VertexLitSingleColor.shader
-
-## TODO
-
-* __Debugging
-    * FPSVisualizer
-* __Utility
-    * AngleMath
-    * ColorMath
-* _GameServices
-    * ResourceService(?)
