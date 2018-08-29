@@ -10,24 +10,25 @@ namespace GameServices.MobileInputService
     [RequireComponent(typeof(Graphic))]
     public class JoyStick : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerDownHandler
     {
+        public static Vector2 Motion { get; private set; }
+
+        private static bool s_isDraggingJoystick;
+        private static int s_draggingTouchID;
+
         [SerializeField]
-        private int movementRadius = 50;
-
-        public event Action OnStartDragging;
-        public event Action OnStopDragging;
-
-        public Vector2 Motion { get; private set; }
-        public bool IsDraggingJoystick { get; private set; }
-        public int DraggingTouchID { get; private set; }
-
-        // for Editor
+        private int m_movementRadius = 50;
+        public int MovementRadius { get { return m_movementRadius; } }
+        
         private Vector3 m_initialPosition;
-
-        public int MovementRadius { get { return movementRadius; } }
         public Vector3 InitialPosition { get { return m_initialPosition; } }
 
         private bool m_isUsingWorldPosition;
         private Camera m_canvasCamera;
+
+        public static bool IsTouchDraggingJoyStick(int touchID)
+        {
+            return (s_isDraggingJoystick && touchID == s_draggingTouchID);
+        }
 
         private void Start()
         {
@@ -59,43 +60,25 @@ namespace GameServices.MobileInputService
 
             Vector2 delta = new Vector2(touchPosition.x - InitialPosition.x, touchPosition.y - InitialPosition.y);
 
-            if (delta.magnitude > movementRadius)
+            if (delta.magnitude > m_movementRadius)
             {
-                delta = delta.normalized * movementRadius;
+                delta = delta.normalized * m_movementRadius;
             }
 
             transform.position = new Vector3(InitialPosition.x + delta.x, InitialPosition.y + delta.y, InitialPosition.z);
 
             // assign motion and state variables for external usage
             // normalizing motion will be necessary
-            Motion = delta / movementRadius;
-            IsDraggingJoystick = true;
-            DraggingTouchID = eventData.pointerId;
-
-            if (OnStartDragging != null)
-            {
-                OnStartDragging.Invoke();
-            }
+            Motion = delta / m_movementRadius;
+            s_isDraggingJoystick = true;
+            s_draggingTouchID = eventData.pointerId;
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
             transform.position = InitialPosition;
-
-            StartCoroutine(CancelDragging());
-        }
-
-        private IEnumerator CancelDragging()
-        {
-            yield return new WaitForEndOfFrame();
-            // reset variables to idle state
-            IsDraggingJoystick = false;
+            s_isDraggingJoystick = false;
             Motion = Vector2.zero;
-
-            if (OnStopDragging != null)
-            {
-                OnStopDragging.Invoke();
-            }
         }
 
         public void OnPointerDown(PointerEventData eventData)

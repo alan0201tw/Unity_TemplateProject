@@ -16,11 +16,11 @@ namespace FatshihDebug
             {
                 Debug.Log("OnTouchMoving");
             };
+        }
 
-            GameServicesLocator.Instance.MobileInputServiceProvider.OnJoystickMoving += (b, arg) =>
-            {
-                Debug.Log("OnJoystickMoving : Motion = " + arg.motion);
-            };
+        private void Update()
+        {
+            Debug.Log(GameServices.MobileInputService.JoyStick.Motion);
         }
     }
 }

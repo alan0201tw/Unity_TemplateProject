@@ -46,8 +46,6 @@ namespace GameServices.Interface
         /// The vector2 is the motion
         /// </summary>
         event UnityEventHandler<MotionEventArgs> OnTouchMoving;
-
-        event UnityEventHandler<MotionEventArgs> OnJoystickMoving;
     }
 }
 
@@ -55,14 +53,8 @@ namespace GameServices.MobileInputService
 {
     public class MobileInputServiceProvider : MonoBehaviour, IMobileInputServiceProvider
     {
-        [SerializeField]
-        private JoyStick joystick;
-
         public event UnityEventHandler<EndedTouchEventArgs> OnTouchEnded;
         public event UnityEventHandler<MotionEventArgs> OnTouchMoving;
-
-        public event UnityEventHandler<MotionEventArgs> OnJoystickMoving;
-        public event Action OnJoystickIdle;
 
         // use this to determine if the touch start on an UI element
         private Dictionary<int, TouchState> touchStateDictionary = new Dictionary<int, TouchState>();
@@ -77,88 +69,67 @@ namespace GameServices.MobileInputService
             GameServicesLocator.Instance.MobileInputServiceProvider = this;
         }
 
+        private void SetTouchState(int touchID, TouchState touchState)
+        {
+            if (!touchStateDictionary.ContainsKey(touchID))
+                touchStateDictionary.Add(touchID, touchState);
+            else
+                touchStateDictionary[touchID] = touchState;
+        }
+
         private void Update()
         {
-            // if player is using joystick
-            if (joystick.IsDraggingJoystick)
-            {
-                Vector2 motion = joystick.Motion;
+            // if there are no touch to be processed, just ignore the following instructions
+            if (Input.touchCount <= 0)
+                return;
 
-                if (OnJoystickMoving != null)
+            foreach (Touch touch in Input.touches)
+            {
+                // pass this touch if this touch is controlling the JoyStick
+                if (JoyStick.IsTouchDraggingJoyStick(touch.fingerId))
+                    continue;
+
+                if (touch.phase == TouchPhase.Began)
                 {
-                    MotionEventArgs eventArgs = new MotionEventArgs(motion);
-                    OnJoystickMoving.Invoke(this, eventArgs);
+                    // If this touch is on UI elements or PhysicsRaycaster targets, mark as invalid
+                    if (EventSystem.current.IsPointerOverGameObject(touch.fingerId))
+                    {
+                        SetTouchState(touch.fingerId, TouchState.Invalid);
+                    }
+                    else // if not, we can mark it as a valid touch
+                    {
+                        SetTouchState(touch.fingerId, TouchState.Valid);
+                    }
                 }
-            }
-            else
-            {
-                // if player is not using joystick
-                if (OnJoystickIdle != null)
-                    OnJoystickIdle.Invoke();
-            }
-
-            if (Input.touchCount > 0)
-            {
-                foreach (Touch touch in Input.touches)
+                else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
                 {
-                    if (joystick.IsDraggingJoystick && touch.fingerId == joystick.DraggingTouchID)
+                    if (IsTouchInDictionaryInvalid(touch.fingerId))
                         continue;
 
-                    if (touch.phase == TouchPhase.Began)
-                    {
-                        // IsPointerOverGameObject will only work when the touch is in began state and
-                        // the default function with id = -1 won't work, so we need to assign fingerId
+                    // this touch leaves screen, so set it to invalid
+                    touchStateDictionary[touch.fingerId] = TouchState.Invalid;
 
-                        // invalid touch : over UI
-                        if (EventSystem.current.IsPointerOverGameObject(touch.fingerId))
-                        {
-                            if (!touchStateDictionary.ContainsKey(touch.fingerId))
-                                touchStateDictionary.Add(touch.fingerId, TouchState.Invalid);
-                            else
-                                touchStateDictionary[touch.fingerId] = TouchState.Invalid;
-                        }
-                        else // valid touch
-                        {
-                            if (!touchStateDictionary.ContainsKey(touch.fingerId))
-                                touchStateDictionary.Add(touch.fingerId, TouchState.Valid);
-                            else
-                                touchStateDictionary[touch.fingerId] = TouchState.Valid;
-                        }
+                    bool isTouchMoved = (touchStateDictionary[touch.fingerId] == TouchState.Moved);
+
+                    if (OnTouchEnded != null)
+                    {
+                        EndedTouchEventArgs eventArgs = new EndedTouchEventArgs(isTouchMoved, touch.position);
+
+                        OnTouchEnded.Invoke(this, eventArgs);
                     }
-                    else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+                }
+                else if (touch.phase == TouchPhase.Moved)
+                {
+                    // if this touch is invalid, don't reset it to moved
+                    if (IsTouchInDictionaryInvalid(touch.fingerId))
+                        continue;
+
+                    touchStateDictionary[touch.fingerId] = TouchState.Moved;
+
+                    if (OnTouchMoving != null)
                     {
-                        if (OnTouchEnded != null)
-                        {
-                            bool isInvalid = IsTouchInDictionaryInvalid(touch.fingerId);
-                            if (isInvalid)
-                                return;
-
-                            bool isTouchMoved = (touchStateDictionary[touch.fingerId] == TouchState.Moved);
-
-                            if (OnTouchEnded != null)
-                            {
-                                EndedTouchEventArgs eventArgs = new EndedTouchEventArgs(isTouchMoved, touch.position);
-
-                                OnTouchEnded.Invoke(this, eventArgs);
-                            }
-                        }
-                        // this touch leaves screen, so set it to invalid
-                        touchStateDictionary[touch.fingerId] = TouchState.Invalid;
-                    }
-                    else if (touch.phase == TouchPhase.Moved)
-                    {
-                        // if this touch is invalid, don't reset it to moved
-                        bool isInvalid = IsTouchInDictionaryInvalid(touch.fingerId);
-                        if (isInvalid)
-                            return;
-
-                        touchStateDictionary[touch.fingerId] = TouchState.Moved;
-
-                        if (OnTouchMoving != null)
-                        {
-                            MotionEventArgs eventArgs = new MotionEventArgs(touch.deltaPosition);
-                            OnTouchMoving.Invoke(this, eventArgs);
-                        }
+                        MotionEventArgs eventArgs = new MotionEventArgs(touch.deltaPosition);
+                        OnTouchMoving.Invoke(this, eventArgs);
                     }
                 }
             }
@@ -179,6 +150,8 @@ namespace GameServices.MobileInputService
 
     public enum TouchState : byte
     {
-        Valid, Moved, Invalid
+        Valid,
+        Moved,
+        Invalid
     }
 }

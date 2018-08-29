@@ -168,7 +168,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d8a16f93c650cc40adfb2db6071cd96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  joystick: {fileID: 592276645}
 --- !u!1 &592276641
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,7 +201,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 200.00006, y: 200.00003}
+  m_AnchoredPosition: {x: 200, y: 200.00003}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &592276643
@@ -249,7 +248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12df30f0c6e05ff4b9a9970fbb9acb8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementRadius: 50
+  m_movementRadius: 50
 --- !u!1 &609395757
 GameObject:
   m_ObjectHideFlags: 0
