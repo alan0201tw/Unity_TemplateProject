@@ -73,7 +73,9 @@ namespace GameServices.SceneService
 
             CoroutineRunner coroutineRunner = DummyGameObject.AddComponent<CoroutineRunner>();
             m_isLoadingScene = true;
-            coroutineRunner.StartCoroutine(LoadSceneCoroutine(sceneIndex, onLoadComplete));
+
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneIndex);
+            coroutineRunner.StartCoroutine(LoadSceneCoroutine(asyncLoad, onLoadComplete));
         }
 
         public void LoadSceneAsync(string sceneName, Action onLoadComplete = null)
@@ -84,32 +86,17 @@ namespace GameServices.SceneService
 
             CoroutineRunner coroutineRunner = DummyGameObject.AddComponent<CoroutineRunner>();
             m_isLoadingScene = true;
-            coroutineRunner.StartCoroutine(LoadSceneCoroutine(sceneName, onLoadComplete));
+
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+            coroutineRunner.StartCoroutine(LoadSceneCoroutine(asyncLoad, onLoadComplete));
         }
 
-        private IEnumerator LoadSceneCoroutine(int sceneIndex, Action onLoadComplete)
+        private IEnumerator LoadSceneCoroutine(AsyncOperation asyncLoad, Action onLoadComplete)
         {
-            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneIndex);
-
             // when the scene completes loading itself to memory
             // it still needs to call Awake and Start on all objects in that scene
             // this process cannot be cut and must be done in one cycle
             // so LoadAsync still yields a stall, but shorter.
-            while (!asyncLoad.isDone)
-            {
-                yield return null;
-            }
-
-            m_isLoadingScene = false;
-
-            if (onLoadComplete != null)
-                onLoadComplete.Invoke();
-        }
-
-        private IEnumerator LoadSceneCoroutine(string sceneName, Action onLoadComplete)
-        {
-            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
-            
             while (!asyncLoad.isDone)
             {
                 yield return null;
