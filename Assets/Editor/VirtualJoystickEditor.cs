@@ -2,12 +2,12 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(JoyStick))]
-public class JoystickEditor : Editor
+[CustomEditor(typeof(VirtualJoyStick))]
+public class VirtualJoystickEditor : Editor
 {
     public void OnSceneGUI()
     {
-        JoyStick joystick = target as JoyStick;
+        VirtualJoyStick joystick = target as VirtualJoyStick;
         Handles.color = Color.yellow;
 
         if (!EditorApplication.isPlaying)

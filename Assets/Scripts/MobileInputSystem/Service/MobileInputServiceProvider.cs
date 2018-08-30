@@ -7,28 +7,6 @@ using UnityEngine.EventSystems;
 
 namespace GameServices.Interface
 {
-    public class EndedTouchEventArgs : EventArgs
-    {
-        public bool isTouchMoved;
-        public Vector2 position;
-
-        public EndedTouchEventArgs(bool isTouchMoved, Vector2 position)
-        {
-            this.isTouchMoved = isTouchMoved;
-            this.position = position;
-        }
-    }
-
-    public class MotionEventArgs : EventArgs
-    {
-        public Vector2 motion;
-
-        public MotionEventArgs(Vector2 motion)
-        {
-            this.motion = motion;
-        }
-    }
-
     public interface IMobileInputServiceProvider
     {
         /// <summary>
@@ -83,12 +61,9 @@ namespace GameServices.MobileInputService
             if (Input.touchCount <= 0)
                 return;
 
+            // loop through each touch and process it according to its phase
             foreach (Touch touch in Input.touches)
             {
-                // pass this touch if this touch is controlling the JoyStick
-                if (JoyStick.IsTouchDraggingJoyStick(touch.fingerId))
-                    continue;
-
                 if (touch.phase == TouchPhase.Began)
                 {
                     // If this touch is on UI elements or PhysicsRaycaster targets, mark as invalid
@@ -114,7 +89,6 @@ namespace GameServices.MobileInputService
                     if (OnTouchEnded != null)
                     {
                         EndedTouchEventArgs eventArgs = new EndedTouchEventArgs(isTouchMoved, touch.position);
-
                         OnTouchEnded.Invoke(this, eventArgs);
                     }
                 }

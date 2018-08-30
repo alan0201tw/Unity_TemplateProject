@@ -6,15 +6,11 @@ using UnityEngine.UI;
 
 namespace GameServices.MobileInputService
 {
-    // use this to strict gameObject to UI elements
+    // use this to strict applying gameObject to UI elements since Graphic class is the base class
+    // for all visual UI Components.
     [RequireComponent(typeof(Graphic))]
-    public class JoyStick : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerDownHandler
+    public sealed class VirtualJoyStick : JoyStick
     {
-        public static Vector2 Motion { get; private set; }
-
-        private static bool s_isDraggingJoystick;
-        private static int s_draggingTouchID;
-
         [SerializeField]
         private int m_movementRadius = 50;
         public int MovementRadius { get { return m_movementRadius; } }
@@ -24,11 +20,6 @@ namespace GameServices.MobileInputService
 
         private bool m_isUsingWorldPosition;
         private Camera m_canvasCamera;
-
-        public static bool IsTouchDraggingJoyStick(int touchID)
-        {
-            return (s_isDraggingJoystick && touchID == s_draggingTouchID);
-        }
 
         private void Start()
         {
@@ -46,7 +37,7 @@ namespace GameServices.MobileInputService
             }
         }
 
-        public void OnDrag(PointerEventData eventData)
+        public override void OnDrag(PointerEventData eventData)
         {
             Vector3 touchPosition;
             if (!m_isUsingWorldPosition)
@@ -70,18 +61,15 @@ namespace GameServices.MobileInputService
             // assign motion and state variables for external usage
             // normalizing motion will be necessary
             Motion = delta / m_movementRadius;
-            s_isDraggingJoystick = true;
-            s_draggingTouchID = eventData.pointerId;
         }
 
-        public void OnPointerUp(PointerEventData eventData)
+        public override void OnPointerUp(PointerEventData eventData)
         {
             transform.position = InitialPosition;
-            s_isDraggingJoystick = false;
             Motion = Vector2.zero;
         }
 
-        public void OnPointerDown(PointerEventData eventData)
+        public override void OnPointerDown(PointerEventData eventData)
         {
             // Do nothing, but without this OnPointerUp won't work!!!
         }

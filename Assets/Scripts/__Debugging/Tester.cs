@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using GameServices;
+﻿using GameServices;
+using UnityEngine;
 
 namespace FatshihDebug
 {
@@ -14,13 +14,13 @@ namespace FatshihDebug
 
             GameServicesLocator.Instance.MobileInputServiceProvider.OnTouchMoving += (boo, p) =>
             {
-                Debug.Log("OnTouchMoving");
+                Debug.Log("OnTouchMoving, motion = " + p.motion);
             };
         }
 
         private void Update()
         {
-            Debug.Log(GameServices.MobileInputService.JoyStick.Motion);
+
         }
     }
 }
