@@ -81,16 +81,16 @@ namespace GameServices.MobileInputService
                     if (IsTouchInDictionaryInvalid(touch.fingerId))
                         continue;
 
-                    // this touch leaves screen, so set it to invalid
-                    touchStateDictionary[touch.fingerId] = TouchState.Invalid;
-
                     bool isTouchMoved = (touchStateDictionary[touch.fingerId] == TouchState.Moved);
-
                     if (OnTouchEnded != null)
                     {
                         EndedTouchEventArgs eventArgs = new EndedTouchEventArgs(isTouchMoved, touch.position);
                         OnTouchEnded.Invoke(this, eventArgs);
                     }
+
+                    // this touch leaves screen, so set it to invalid
+                    // put the operation at last to avoid data corruption
+                    touchStateDictionary[touch.fingerId] = TouchState.Invalid;
                 }
                 else if (touch.phase == TouchPhase.Moved)
                 {
