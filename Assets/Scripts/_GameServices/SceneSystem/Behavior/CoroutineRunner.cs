@@ -4,8 +4,5 @@ using UnityEngine;
 
 namespace GameServices.SceneService
 {
-    public class CoroutineRunner : MonoBehaviour
-    {
-        
-    }
+    public class CoroutineRunner : MonoBehaviour { }
 }
