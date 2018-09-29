@@ -12,8 +12,8 @@ namespace GameServices.MobileInputService
     public sealed class VirtualJoyStick : JoyStick
     {
         [SerializeField]
-        private int m_movementRadius = 50;
-        public int MovementRadius { get { return m_movementRadius; } }
+        private float m_movementRadius = 50;
+        public float MovementRadius { get { return m_movementRadius; } }
         
         private Vector3 m_initialPosition;
         public Vector3 InitialPosition { get { return m_initialPosition; } }
