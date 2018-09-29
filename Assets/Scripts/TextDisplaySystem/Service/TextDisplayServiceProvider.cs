@@ -12,10 +12,10 @@ namespace GameServices.TextDisplayService
     // register a instance to GameServicesLocator
 
     // Also, this implementation of ITextDisplayServiceProvider is for displaying Darksoul's
-    // dialogue style texts
-    public class BottomTextDisplayServiceProvider : MonoBehaviour, ITextDisplayServiceProvider
+    // dialogue style texts (use with the text prefab in this project)
+    public class TextDisplayServiceProvider : MonoBehaviour, ITextDisplayServiceProvider
     {
-        // TODO : change this approach to an event-queue system
+        // You can change this approach to an event-queue system
         // external code register string to queue, or call DisplayImmediate
 
         [SerializeField]
