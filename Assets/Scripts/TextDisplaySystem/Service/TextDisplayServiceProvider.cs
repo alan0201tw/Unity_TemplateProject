@@ -12,10 +12,10 @@ namespace GameServices.TextDisplayService
     // register a instance to GameServicesLocator
 
     // Also, this implementation of ITextDisplayServiceProvider is for displaying Darksoul's
-    // dialogue style texts (use with the text prefab in this project)
+    // dialogue style texts
     public class TextDisplayServiceProvider : MonoBehaviour, ITextDisplayServiceProvider
     {
-        // You can change this approach to an event-queue system
+        // TODO : change this approach to an event-queue system
         // external code register string to queue, or call DisplayImmediate
 
         [SerializeField]
@@ -37,7 +37,7 @@ namespace GameServices.TextDisplayService
             }
         }
 
-        private Queue<QueueUnit> m_displayRequestQueue = new Queue<QueueUnit>();
+        private LinkedList<QueueUnit> m_displayRequestQueue = new LinkedList<QueueUnit>();
 
         private GameObject m_currentDisplayingText;
 
@@ -55,15 +55,18 @@ namespace GameServices.TextDisplayService
         public void DisplayText(string content, float durationTime, Action onDisplayEnded)
         {
             // for a regular displaying text, just put it in the queue
-            m_displayRequestQueue.Enqueue(new QueueUnit(content, durationTime, onDisplayEnded));
+            m_displayRequestQueue.AddLast(new QueueUnit(content, durationTime, onDisplayEnded));
         }
 
         public void DisplayTextImmediate(string content, float durationTime, Action onDisplayEnded)
         {
-            // if currently is displaying some text, just override it
+            // if currently is displaying some text, stop it and push content to front
+            // and restore working coroutine
             if (m_currentDisplayingText != null)
             {
-                m_currentDisplayingText.GetComponentInChildren<Text>().text = content;
+                StopAllCoroutines();
+                m_displayRequestQueue.AddFirst(new QueueUnit(content, durationTime, onDisplayEnded));
+                StartCoroutine(ConstantWorkingCoroutine());
             }
             else // otherwise just regularly display it
             {
@@ -91,7 +94,8 @@ namespace GameServices.TextDisplayService
                 }
 
                 // retrieve resolving unit and set data to text accordingly
-                QueueUnit currentUnit = m_displayRequestQueue.Dequeue();
+                QueueUnit currentUnit = m_displayRequestQueue.First.Value;
+                m_displayRequestQueue.RemoveFirst();
                 m_currentDisplayingText.GetComponentInChildren<Text>().text = currentUnit.content;
 
                 // if we just created the displaying prefab, we need to fade it in
