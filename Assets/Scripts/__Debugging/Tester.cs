@@ -1,5 +1,6 @@
 ﻿using GameServices;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace FatshihDebug
 {
@@ -20,7 +21,19 @@ namespace FatshihDebug
 
         private void Update()
         {
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                //GameServicesLocator.Instance.SceneServiceProvider.LoadSceneAsync("ComplexScene", () =>
+                //{
+                //    Debug.Log("WTF");
+                //});
 
+                //GameServicesLocator.Instance.SceneServiceProvider.LoadScene("ComplexScene", () =>
+                //{
+                //    Debug.Log("WTF");
+                //});
+                SceneManager.LoadScene("ComplexScene");
+            }
         }
     }
 }
