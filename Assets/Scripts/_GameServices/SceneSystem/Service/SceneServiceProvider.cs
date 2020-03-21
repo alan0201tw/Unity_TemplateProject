@@ -27,11 +27,14 @@ namespace GameServices.SceneService
             get
             {
                 if (m_dummyGameObject == null)
+                {
                     m_dummyGameObject = new GameObject("DummyGameObject for SceneServiceProvider");
+                    UnityEngine.Object.DontDestroyOnLoad(m_dummyGameObject);
+                }
                 return m_dummyGameObject;
             }
         }
-        
+
         public int CurrentSceneIndex
         {
             get { return SceneManager.GetActiveScene().buildIndex; }
@@ -80,7 +83,7 @@ namespace GameServices.SceneService
             // it still needs to call Awake and Start on all objects in that scene
             // this process cannot be cut and must be done in one cycle
             // so LoadAsync still yields a stall, but shorter.
-            
+
             while (!asyncLoad.isDone)
             {
                 yield return null;
@@ -88,6 +91,8 @@ namespace GameServices.SceneService
 
             if (onLoadComplete != null)
                 onLoadComplete.Invoke();
+
+            UnityEngine.Object.DestroyImmediate(DummyGameObject);
         }
     }
 }
